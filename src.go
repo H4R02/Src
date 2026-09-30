@@ -29,7 +29,7 @@ const sessionsDir = "sessions"
 
 // Environment Variables
 var (
-	ApiID    int
+	ApiID    int32 // Fixed: Set strictly as int32 to match telegram.ClientConfig
 	ApiHash  string
 	BotToken string
 	MongoURI string
@@ -40,11 +40,12 @@ var (
 func loadEnvVariables() {
 	var err error
 
-	ApiID, err = strconv.Atoi(os.Getenv("API_ID"))
+	apiIDInt, err := strconv.Atoi(os.Getenv("API_ID"))
 	if err != nil {
 		fmt.Println("❌ Error: API_ID must be a valid integer.")
 		os.Exit(1)
 	}
+	ApiID = int32(apiIDInt) // Cast int to int32
 
 	ApiHash = os.Getenv("API_HASH")
 	BotToken = os.Getenv("BOT_TOKEN")
@@ -1593,7 +1594,7 @@ func main() {
 	}()
 
 	client, err := telegram.NewClient(telegram.ClientConfig{
-		AppID: int32(ApiID), AppHash: ApiHash, SessionName: "bot", Session: "bot.session",
+		AppID: ApiID, AppHash: ApiHash, SessionName: "bot", Session: "bot.session",
 	})
 	if err != nil {
 		fmt.Println("❌ Client Error:", err)
