@@ -1,5 +1,5 @@
-# Base image
-FROM golang:1.21-alpine
+# Base image updated to fetch the latest Go version automatically
+FROM golang:alpine
 
 # Set working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 # Install FFmpeg and Git (Required for video thumbnails and fetching Go modules)
 RUN apk add --no-cache ffmpeg git
 
-# Copy go mod and sum files (If you don't have go.mod, render will build it directly, but copying source is needed)
+# Copy source code
 COPY . .
 
 # Initialize go mod if it doesn't exist, and tidy dependencies
